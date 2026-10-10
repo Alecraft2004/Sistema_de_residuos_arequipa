@@ -1,0 +1,33 @@
+# Entorno virtual y archivos de Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Credenciales y configuración local
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Archivos de desarrollo y pruebas
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Registros y archivos temporales
+*.log
+*.tmp
+*.bak
+
+# Configuración de editores
+.vscode/
+.idea/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

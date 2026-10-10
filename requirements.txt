@@ -1,0 +1,7 @@
+streamlit==1.64.0
+pandas==2.3.3
+SQLAlchemy==2.0.54
+pg8000==1.31.5
+python-dotenv==1.2.4
+scikit-learn==1.7.2
+matplotlib==3.10.9
