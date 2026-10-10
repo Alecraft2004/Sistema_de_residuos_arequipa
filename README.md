@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sistema Predictivo de Residuos — Arequipa
 
 Aplicación de gestión y predicción de acumulación de residuos urbanos para Arequipa.
@@ -24,3 +25,6 @@ Al abrirse la aplicación, las tablas y las cinco zonas demostrativas se creará
 - Historial de las últimas predicciones guardado en PostgreSQL.
 
 Los datos de entrenamiento son simulados y sirven para demostrar el funcionamiento del modelo; no representan datos oficiales de la Municipalidad de Arequipa.
+=======
+# Sistema_de_residuos_arequipa
+>>>>>>> ca9392cfe2ceae3aa2f0e90b864af8a983f64108
