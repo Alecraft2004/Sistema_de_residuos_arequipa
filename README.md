@@ -1,30 +1,40 @@
-<<<<<<< HEAD
-# Sistema Predictivo de Residuos — Arequipa
+# AQPredict Residuos — Backend
 
-Aplicación de gestión y predicción de acumulación de residuos urbanos para Arequipa.
+API REST para la gestión predictiva de residuos urbanos de Arequipa. El proyecto usa PostgreSQL, SQLAlchemy, FastAPI y modelos Random Forest demostrativos.
 
-## Preparación local
+## Preparación
 
-1. En pgAdmin, crea una base de datos llamada `residuos_arequipa`.
-2. Copia `.env.example`, renómbralo como `.env` y reemplaza `TU_CONTRASENA` por la contraseña local del usuario `postgres`.
-3. Ejecuta la aplicación:
+1. Crea una base de datos PostgreSQL llamada `residuos_arequipa`.
+2. Copia `.env.example` como `.env` y completa `DATABASE_URL` con tu contraseña local.
+3. Instala las dependencias:
 
 ```powershell
-.\.venv\Scripts\streamlit run app.py
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Al abrirse la aplicación, las tablas y las cinco zonas demostrativas se crearán automáticamente.
+4. Inicia el backend:
 
-## Avance actual: 50%
+```powershell
+.\.venv\Scripts\uvicorn.exe main:app --reload
+```
 
-- Registro y consulta de residuos en PostgreSQL.
-- Datos demostrativos de zonas urbanas.
-- Random Forest para estimar la cantidad de residuos.
-- Random Forest para clasificar el nivel de acumulación: bajo, medio o alto.
-- Priorización y recomendación de atención.
-- Historial de las últimas predicciones guardado en PostgreSQL.
+La API estará disponible en `http://127.0.0.1:8000` y la documentación interactiva en `http://127.0.0.1:8000/docs`.
 
-Los datos de entrenamiento son simulados y sirven para demostrar el funcionamiento del modelo; no representan datos oficiales de la Municipalidad de Arequipa.
-=======
-# Sistema_de_residuos_arequipa
->>>>>>> ca9392cfe2ceae3aa2f0e90b864af8a983f64108
+## Endpoints principales
+
+- `POST /auth/login`: genera un token de acceso.
+- `GET /zonas`: lista zonas y distritos.
+- `GET` y `POST /residuos`: consulta o registra residuos.
+- `GET` y `POST /predicciones`: consulta o genera predicciones.
+- `GET /priorizacion`: devuelve prioridades y ruta sugerida.
+- `GET /reportes/resumen`: devuelve indicadores generales.
+- `GET /health`: confirma que el servicio está disponible.
+
+En `/docs`, usa `POST /auth/login`, copia `access_token` y presiona **Authorize**. Escribe `Bearer` seguido del token para probar los endpoints protegidos.
+
+## Cuentas demostrativas
+
+- Administrador: `admin` / `admin123`
+- Operador: `operador` / `operador123`
+
+Los datos y modelos son demostrativos; no representan información oficial de la Municipalidad Provincial de Arequipa.

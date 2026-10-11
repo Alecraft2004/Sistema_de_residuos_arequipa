@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
+import secrets
 from datetime import date, time
 
 from dotenv import load_dotenv
@@ -63,6 +65,15 @@ class Prediccion(Base):
     zona: Mapped[Zona] = relationship()
 
 
+class Usuario(Base):
+    __tablename__ = "usuarios"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    usuario: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    clave_hash: Mapped[str] = mapped_column(String(200), nullable=False)
+    rol: Mapped[str] = mapped_column(String(20), nullable=False)
+
+
 def get_engine():
     database_url = os.getenv("DATABASE_URL")
     if not database_url:
@@ -75,25 +86,58 @@ def preparar_base_datos() -> None:
     Base.metadata.create_all(engine)
 
     with Session(engine) as session:
-        if session.scalar(select(Distrito.id).limit(1)):
-            return
+        if not session.scalar(select(Distrito.id).limit(1)):
+            cerro_colorado = Distrito(nombre="Cerro Colorado")
+            paucarpata = Distrito(nombre="Paucarpata")
+            cercado = Distrito(nombre="Cercado")
+            session.add_all([cerro_colorado, paucarpata, cercado])
+            session.flush()
+            session.add_all(
+                [
+                    Zona(nombre="Zamácola", poblacion_estimada=28500, distrito=cerro_colorado),
+                    Zona(nombre="La Libertad", poblacion_estimada=22100, distrito=cerro_colorado),
+                    Zona(nombre="Miguel Grau", poblacion_estimada=31800, distrito=paucarpata),
+                    Zona(nombre="Mariscal Cáceres", poblacion_estimada=19400, distrito=paucarpata),
+                    Zona(nombre="Centro Histórico", poblacion_estimada=12600, distrito=cercado),
+                ]
+            )
+            session.commit()
 
-        cerro_colorado = Distrito(nombre="Cerro Colorado")
-        paucarpata = Distrito(nombre="Paucarpata")
-        cercado = Distrito(nombre="Cercado")
-        session.add_all([cerro_colorado, paucarpata, cercado])
-        session.flush()
+    with Session(engine) as session:
+        if not session.scalar(select(Usuario.id).limit(1)):
+            session.add_all(
+                [
+                    Usuario(usuario="admin", clave_hash=_hash_clave("admin123"), rol="Administrador"),
+                    Usuario(usuario="operador", clave_hash=_hash_clave("operador123"), rol="Operador"),
+                ]
+            )
+            session.commit()
 
-        session.add_all(
-            [
-                Zona(nombre="Zamácola", poblacion_estimada=28500, distrito=cerro_colorado),
-                Zona(nombre="La Libertad", poblacion_estimada=22100, distrito=cerro_colorado),
-                Zona(nombre="Miguel Grau", poblacion_estimada=31800, distrito=paucarpata),
-                Zona(nombre="Mariscal Cáceres", poblacion_estimada=19400, distrito=paucarpata),
-                Zona(nombre="Centro Histórico", poblacion_estimada=12600, distrito=cercado),
-            ]
-        )
-        session.commit()
+
+def _hash_clave(clave: str, sal: str | None = None) -> str:
+    sal = sal or secrets.token_hex(16)
+    clave_hash = hashlib.pbkdf2_hmac("sha256", clave.encode(), sal.encode(), 120_000).hex()
+    return f"{sal}${clave_hash}"
+
+
+def autenticar(usuario: str, clave: str) -> dict | None:
+    with Session(get_engine()) as session:
+        cuenta = session.scalar(select(Usuario).where(Usuario.usuario == usuario))
+        if not cuenta:
+            return None
+        sal, hash_guardado = cuenta.clave_hash.split("$", maxsplit=1)
+        if _hash_clave(clave, sal).split("$", maxsplit=1)[1] != hash_guardado:
+            return None
+        return {"usuario": cuenta.usuario, "rol": cuenta.rol}
+
+
+def obtener_usuario(usuario: str) -> dict | None:
+    """Obtiene una cuenta existente para restaurar una sesión previamente validada."""
+    with Session(get_engine()) as session:
+        cuenta = session.scalar(select(Usuario).where(Usuario.usuario == usuario))
+        if not cuenta:
+            return None
+        return {"usuario": cuenta.usuario, "rol": cuenta.rol}
 
 
 def obtener_zonas() -> list[Zona]:
