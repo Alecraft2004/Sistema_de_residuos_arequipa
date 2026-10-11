@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from math import asin, cos, radians, sin, sqrt
 
-from ml_service import predecir_residuos
+from .ml_service import predecir_residuos
 
 COORDENADAS = {
     "Centro Histórico": (-16.3989, -71.5369),

@@ -2,6 +2,23 @@
 
 API REST para la gestión predictiva de residuos urbanos de Arequipa. El proyecto usa PostgreSQL, SQLAlchemy, FastAPI y modelos Random Forest demostrativos.
 
+## Estructura del proyecto
+
+```text
+sistema_residuos_arequipa/
+├── app/
+│   ├── main.py              # API FastAPI, endpoints y autenticación
+│   ├── database.py          # Modelos SQLAlchemy y acceso a PostgreSQL
+│   └── services/
+│       ├── ml_service.py    # Predicción con Random Forest
+│       └── planificador.py  # Priorización y ruta sugerida
+├── main.py                  # Punto de entrada para Uvicorn
+├── .env                     # Configuración local (no se sube a Git)
+├── .env.example             # Plantilla de configuración
+├── requirements.txt
+└── README.md
+```
+
 ## Preparación
 
 1. Crea una base de datos PostgreSQL llamada `residuos_arequipa`.
