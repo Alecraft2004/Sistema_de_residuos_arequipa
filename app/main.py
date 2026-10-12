@@ -4,12 +4,14 @@ Ejecutar con: uvicorn main:app --reload
 Documentación interactiva: http://127.0.0.1:8000/docs
 """
 
+from collections import defaultdict, deque
 from datetime import date, datetime, time, timedelta, timezone
 import os
+from threading import Lock
 
 import jwt
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
@@ -44,6 +46,12 @@ app.add_middleware(
 
 ESQUEMA_TOKEN = "HS256"
 SEGURIDAD = HTTPBearer()
+MAX_INTENTOS_LOGIN = 5
+VENTANA_INTENTOS = timedelta(minutes=10)
+BLOQUEO_INTENTOS = timedelta(minutes=15)
+intentos_login: dict[str, deque[datetime]] = defaultdict(deque)
+bloqueos_login: dict[str, datetime] = {}
+bloqueo_login = Lock()
 
 
 class Credenciales(BaseModel):
@@ -70,6 +78,39 @@ class PrediccionEntrada(BaseModel):
 def clave_token() -> str:
     """Usa una clave local de desarrollo si SECRET_KEY no está configurada."""
     return os.getenv("SECRET_KEY", "aqpredict-clave-local-solo-desarrollo")
+
+
+def verificar_intentos_login(ip: str) -> None:
+    """Limita intentos fallidos para reducir ataques de fuerza bruta."""
+    ahora = datetime.now(timezone.utc)
+    with bloqueo_login:
+        hasta = bloqueos_login.get(ip)
+        if hasta and hasta > ahora:
+            segundos = max(1, int((hasta - ahora).total_seconds()))
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail="Demasiados intentos. Intenta nuevamente más tarde.",
+                headers={"Retry-After": str(segundos)},
+            )
+        bloqueos_login.pop(ip, None)
+
+
+def registrar_fallo_login(ip: str) -> None:
+    ahora = datetime.now(timezone.utc)
+    limite = ahora - VENTANA_INTENTOS
+    with bloqueo_login:
+        intentos = intentos_login[ip]
+        while intentos and intentos[0] < limite:
+            intentos.popleft()
+        intentos.append(ahora)
+        if len(intentos) >= MAX_INTENTOS_LOGIN:
+            bloqueos_login[ip] = ahora + BLOQUEO_INTENTOS
+            intentos.clear()
+
+
+def limpiar_intentos_login(ip: str) -> None:
+    with bloqueo_login:
+        intentos_login.pop(ip, None)
 
 
 def crear_token(cuenta: dict) -> str:
@@ -115,10 +156,14 @@ def estado() -> dict:
 
 
 @app.post("/auth/login", tags=["Autenticación"])
-def iniciar_sesion(entrada: Credenciales) -> dict:
+def iniciar_sesion(entrada: Credenciales, request: Request) -> dict:
+    ip = request.client.host if request.client else "desconocida"
+    verificar_intentos_login(ip)
     cuenta = autenticar(entrada.usuario.strip(), entrada.clave)
     if not cuenta:
+        registrar_fallo_login(ip)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales inválidas.")
+    limpiar_intentos_login(ip)
     return {"access_token": crear_token(cuenta), "token_type": "bearer", "usuario": cuenta}
 
 
