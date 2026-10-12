@@ -1,0 +1,2 @@
+import { IconChartBar, IconDashboard, IconDatabase, IconListCheck, IconMapPin, IconRecycle, IconSettings } from '@tabler/icons-react'
+export const navItems = [['inicio', 'Panel de control', IconDashboard], ['registro', 'Registrar residuos', IconRecycle], ['historial', 'Historial', IconDatabase], ['prediccion', 'Predicción y mapa', IconMapPin], ['priorizacion', 'Priorización', IconListCheck], ['reportes', 'Reportes', IconChartBar], ['administracion', 'Administración', IconSettings]]

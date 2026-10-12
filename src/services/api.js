@@ -1,0 +1,2 @@
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+export function api(path, { token, method = 'GET', body } = {}) { return fetch(`${API_URL}${path}`, { method, headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined }).then(async (response) => { const payload = await response.json().catch(() => ({})); if (!response.ok) throw new Error(payload.detail || 'No se pudo conectar con el servidor.'); return payload }) }
