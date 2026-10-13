@@ -8,3 +8,4 @@
 .login-intro{justify-content:flex-start;gap:27px}.intro-brand{flex:none}.intro-copy{flex:none}.access-points{flex:none;margin-top:auto}.login-intro .eyebrow{margin-bottom:11px}@media(max-width:760px){.login-intro{justify-content:flex-start;gap:24px}.access-points{margin-top:0}}
 
 .login-card{transform:translateY(-18px)}@media(max-width:760px){.login-card{transform:translateY(-10px)}}
+.login-status.offline{color:#ffc0ba}.login-status.offline i{background:#ff7971;box-shadow:0 0 14px #ff7971}.login-error{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:10px;line-height:1.35}.login-error svg{flex:none;margin-top:2px}.login-error span{display:grid;gap:2px}.login-error b{font-size:12px}.login-error span:not(b){font-size:12px}

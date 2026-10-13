@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { IconChevronRight, IconMapPin, IconRecycle, IconSparkles } from '@tabler/icons-react'
+import { IconAlertTriangle, IconChevronRight, IconMapPin, IconRecycle, IconSparkles } from '@tabler/icons-react'
 import './styles/leaves.css'
 import './styles/login-background.css'
 import './styles/login-typography.css'
@@ -9,6 +9,7 @@ const leafTiming = [[-9.6, 8.2], [-3.4, 7.1], [-12.8, 9.4], [-6.7, 6.8], [-15.1,
 
 export default function Login({ onSubmit }) {
   const [usuario, setUsuario] = useState(''), [clave, setClave] = useState(''), [error, setError] = useState(''), [busy, setBusy] = useState(false), leavesRef = useRef(null)
+  const serverIssue = error.includes('servidor') || error.includes('conectar')
   const submit = async (event) => { event.preventDefault(); setBusy(true); setError(''); try { await onSubmit({ usuario, clave }) } catch (loginError) { setError(loginError.message) } finally { setBusy(false) } }
   const resetLeaves = () => leavesRef.current?.querySelectorAll('.leaf-sway').forEach((leaf) => { leaf.style.setProperty('--push-x', '0px'); leaf.style.setProperty('--push-y', '0px'); leaf.style.setProperty('--turn', '0deg') })
   const sweepLeaves = (event) => {
@@ -29,11 +30,11 @@ export default function Login({ onSubmit }) {
         <div className="access-points"><span><IconRecycle size={18} />Registro</span><span><IconSparkles size={18} />Predicción</span><span><IconMapPin size={18} />Ruta</span></div>
       </aside>
       <form className="login-card" onSubmit={submit}>
-        <div className="login-status"><i /><span>Sistema disponible</span></div>
+        <div className={`login-status ${serverIssue ? 'offline' : ''}`}><i /><span>{serverIssue ? 'Servidor no disponible' : 'Sistema disponible'}</span></div>
         <p className="eyebrow">Acceso de operación</p><h2>Iniciar sesión</h2><p className="muted">Continúa con tus credenciales.</p>
         <label>Usuario<input value={usuario} onChange={(event) => setUsuario(event.target.value)} autoComplete="username" required /></label>
         <label>Contraseña<input type="password" value={clave} onChange={(event) => setClave(event.target.value)} autoComplete="current-password" required /></label>
-        {error && <p className="form-error">{error}</p>}
+        {error && <p className="form-error login-error" role="alert"><IconAlertTriangle size={18} /><span><b>{serverIssue ? 'Problema de conexión' : 'No se pudo iniciar sesión'}</b>{error}</span></p>}
         <button className="primary wide" disabled={busy}>{busy ? 'Ingresando...' : 'Entrar al centro'}<IconChevronRight size={18} /></button>
       </form>
     </section>
