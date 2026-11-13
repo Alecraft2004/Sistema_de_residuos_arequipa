@@ -201,3 +201,10 @@ def resumen(_: dict = Depends(usuario_actual)) -> dict:
         "residuos_registrados_kg": sum(item["Cantidad (kg)"] for item in registros),
         "metricas_modelo": obtener_metricas_modelo(),
     }
+
+
+from .routers.etl import router as etl_router
+from .routers.minam import router as minam_router
+
+app.include_router(etl_router)
+app.include_router(minam_router)

@@ -4,15 +4,20 @@ from __future__ import annotations
 
 import hashlib
 import os
+import ssl
 import secrets
+from pathlib import Path
 from datetime import date, time
 
 from dotenv import load_dotenv
 from sqlalchemy import Date, ForeignKey, Integer, String, Time, create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, joinedload, mapped_column, relationship
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parents[1]
 
+load_dotenv(BASE_DIR / ".env", override=False)
+
+CA_CERT = BASE_DIR / "certs" / "prod-ca-2021.crt"
 
 class Base(DeclarativeBase):
     pass
@@ -74,12 +79,36 @@ class Usuario(Base):
     rol: Mapped[str] = mapped_column(String(20), nullable=False)
 
 
-def get_engine():
-    database_url = os.getenv("DATABASE_URL")
-    if not database_url:
-        raise RuntimeError("No se configuró DATABASE_URL. Revisa el archivo .env.")
-    return create_engine(database_url, pool_pre_ping=True)
+_engine = None
 
+def get_engine():
+    global _engine
+
+    if _engine is not None:
+        return _engine
+
+    database_url = os.getenv("DATABASE_URL")
+
+    if not database_url:
+        raise RuntimeError("DATABASE_URL no está configurada")
+
+    if not CA_CERT.exists():
+        raise RuntimeError(f"No se encontró el certificado SSL: {CA_CERT}")
+
+    ssl_context = ssl.create_default_context(
+        cafile=str(CA_CERT)
+    )
+
+    _engine = create_engine(
+        database_url,
+        connect_args={"ssl_context": ssl_context},
+        pool_pre_ping=True,
+        pool_size=2,
+        max_overflow=3,
+        pool_recycle=1800,
+    )
+
+    return _engine
 
 def preparar_base_datos() -> None:
     engine = get_engine()

@@ -1,0 +1,94 @@
+{
+  "dataset_origen": "data/processed/minam_kdd.csv",
+  "filas_origen": 11310,
+  "filas_caracteristicas": 11310,
+  "filas_descartadas_por_falta_historial": 0,
+  "filas_entrenamiento": 7545,
+  "filas_prueba": 1891,
+  "ubigeos_caracteristicas": 1891,
+  "ubigeos_entrenamiento": 1891,
+  "ubigeos_prueba": 1891,
+  "objetivos_entrenamiento": [
+    2020,
+    2021,
+    2022,
+    2023
+  ],
+  "objetivos_prueba": [
+    2024
+  ],
+  "anios_observados_entrenamiento": [
+    2020,
+    2021,
+    2022,
+    2023
+  ],
+  "anios_observados_prueba": [
+    2024
+  ],
+  "entrenamiento_contiene_2024": false,
+  "prueba_solo_contiene_2024": true,
+  "horizontes": {
+    "generacion_lag_1": {
+      "disponibles": 9419,
+      "sin_historial": 1891
+    },
+    "generacion_lag_2": {
+      "disponibles": 7528,
+      "sin_historial": 3782
+    },
+    "generacion_lag_3": {
+      "disponibles": 5638,
+      "sin_historial": 5672
+    },
+    "poblacion_lag_1": {
+      "disponibles": 9419,
+      "sin_historial": 1891
+    },
+    "variacion_anual_generacion": {
+      "disponibles": 7528,
+      "sin_historial": 3782
+    },
+    "tendencia_generacion_3_anios": {
+      "disponibles": 5638,
+      "sin_historial": 5672
+    }
+  },
+  "definiciones": {
+    "variacion_anual_generacion": "generacion_(t-1) - generacion_(t-2); no utiliza el objetivo t",
+    "tendencia_generacion_3_anios": "(generacion_(t-1) - generacion_(t-3)) / 2, solo con tres años previos consecutivos",
+    "poblacion_lag_1": "poblacion total del mismo UBIGEO en t-1"
+  },
+  "validaciones": {
+    "claves_unicas_ubigeo_anio_objetivo": true,
+    "errores_generacion_lag_1": 0,
+    "columnas_predictoras": [
+      "ubigeo",
+      "departamento",
+      "provincia",
+      "distrito",
+      "anio_objetivo",
+      "generacion_lag_1",
+      "generacion_lag_2",
+      "generacion_lag_3",
+      "poblacion_lag_1",
+      "variacion_anual_generacion",
+      "tendencia_generacion_3_anios"
+    ],
+    "columnas_prohibidas_como_predictoras": [
+      "generacion_municipal_t_anio",
+      "poblacion_total_inei",
+      "poblacion_urbana_inei",
+      "poblacion_rural_inei",
+      "log1p_generacion_municipal_t_anio"
+    ],
+    "fuga_temporal_detectada": false
+  },
+  "tratamiento": {
+    "rezagos_sin_historial": "NULL",
+    "imputacion": "no realizada",
+    "extremos": "conservados; revisar en entrenamiento",
+    "division": "temporal, sin aleatorizacion",
+    "oefa": "no utilizado"
+  }
+}

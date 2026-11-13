@@ -1,0 +1,35 @@
+{
+  "dataset": "MINAM_GENERACION_ANUAL",
+  "unidad_observacion": "una fila por UBIGEO + ANIO",
+  "predictoras": [
+    "ubigeo",
+    "departamento",
+    "provincia",
+    "distrito",
+    "anio",
+    "poblacion_total_inei",
+    "poblacion_urbana_inei",
+    "poblacion_rural_inei"
+  ],
+  "objetivo": "generacion_municipal_t_anio",
+  "excluidas_por_fuga": [
+    "generacion_municipal_t_dia",
+    "generacion_domiciliaria_urbana_t_anio",
+    "generacion_domiciliaria_urbana_t_dia",
+    "generacion_per_capita_municipal",
+    "generacion_per_capita_domiciliaria"
+  ],
+  "derivadas": {
+    "anio_desde_inicio": "anio menos el primer año observado",
+    "particion_temporal": "entrenamiento 2019-2023 o prueba 2024",
+    "brecha_poblacion": "poblacion_total - poblacion_urbana - poblacion_rural, solo si no hay diferencias",
+    "log1p_poblacion_total_inei": "alternativa no sustitutiva para asimetría",
+    "log1p_generacion_municipal_t_anio": "alternativa de transformación del objetivo"
+  },
+  "tratamiento": {
+    "nulos": "reportar; no imputar automáticamente",
+    "extremos": "reportar mediante IQR; no eliminar",
+    "cobertura_incompleta": "conservar y filtrar posteriormente",
+    "oeFA": "no incluido ni unido"
+  }
+}

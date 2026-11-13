@@ -31,3 +31,5 @@ coverage.xml
 # Archivos del sistema operativo
 .DS_Store
 Thumbs.db
+data/raw/*
+!data/raw/.gitkeep

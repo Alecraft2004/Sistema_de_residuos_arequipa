@@ -1,0 +1,138 @@
+{
+  "dataset": "MINAM_GENERACION_ANUAL",
+  "filas_antes": 11310,
+  "filas_despues": 11310,
+  "filas_excluidas": 0,
+  "columnas_obligatorias": [
+    "ubigeo",
+    "departamento",
+    "provincia",
+    "distrito",
+    "anio",
+    "poblacion_total_inei",
+    "poblacion_urbana_inei",
+    "poblacion_rural_inei",
+    "generacion_municipal_t_anio"
+  ],
+  "valores_faltantes": {
+    "ubigeo": 0,
+    "departamento": 0,
+    "provincia": 0,
+    "distrito": 0,
+    "anio": 0,
+    "poblacion_total_inei": 0,
+    "poblacion_urbana_inei": 0,
+    "poblacion_rural_inei": 0,
+    "generacion_municipal_t_anio": 0
+  },
+  "valores_negativos": {
+    "poblacion_total_inei": 0,
+    "poblacion_urbana_inei": 0,
+    "poblacion_rural_inei": 0,
+    "generacion_municipal_t_anio": 0
+  },
+  "duplicados_por_ubigeo_anio": {
+    "grupos": {},
+    "filas_excedentes": 0
+  },
+  "tipos_observados": {
+    "ubigeo": [
+      "str"
+    ],
+    "departamento": [
+      "str"
+    ],
+    "provincia": [
+      "str"
+    ],
+    "distrito": [
+      "str"
+    ],
+    "anio": [
+      "int"
+    ],
+    "poblacion_total_inei": [
+      "Decimal"
+    ],
+    "poblacion_urbana_inei": [
+      "Decimal"
+    ],
+    "poblacion_rural_inei": [
+      "Decimal"
+    ],
+    "generacion_municipal_t_anio": [
+      "Decimal"
+    ]
+  },
+  "consistencia_poblacion": {
+    "filas_comparables": 11310,
+    "filas_con_diferencia": 0,
+    "diferencia_maxima": "0.000",
+    "brecha_permitida": true
+  },
+  "cobertura_temporal": {
+    "anios": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "por_ubigeo": {
+      "2": 1,
+      "4": 16,
+      "6": 1874
+    },
+    "ubigeos_con_seis_anios": 1874,
+    "anios_minimos_por_ubigeo": 2,
+    "anios_maximos_por_ubigeo": 6
+  },
+  "valores_extremos": {
+    "poblacion_total_inei": {
+      "cantidad": 1456,
+      "limite_inferior": "-12271.125000",
+      "limite_superior": "24475.875000",
+      "metodo": "IQR_1.5",
+      "tratamiento": "documentado_sin_eliminacion"
+    },
+    "poblacion_urbana_inei": {
+      "cantidad": 1846,
+      "limite_inferior": "-6073.750000",
+      "limite_superior": "11424.250000",
+      "metodo": "IQR_1.5",
+      "tratamiento": "documentado_sin_eliminacion"
+    },
+    "poblacion_rural_inei": {
+      "cantidad": 975,
+      "limite_inferior": "-4565.375000",
+      "limite_superior": "8705.625000",
+      "metodo": "IQR_1.5",
+      "tratamiento": "documentado_sin_eliminacion"
+    },
+    "generacion_municipal_t_anio": {
+      "cantidad": 1880,
+      "limite_inferior": "-1526.891250000",
+      "limite_superior": "2838.158750000",
+      "metodo": "IQR_1.5",
+      "tratamiento": "documentado_sin_eliminacion"
+    }
+  },
+  "reglas": {
+    "no_eliminar_extremos": true,
+    "no_eliminar_cobertura_incompleta": true,
+    "clave_unica_esperada": [
+      "ubigeo",
+      "anio"
+    ],
+    "particion_temporal": {
+      "entrenamiento": [
+        2019,
+        2023
+      ],
+      "prueba": [
+        2024
+      ]
+    }
+  }
+}
