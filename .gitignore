@@ -33,3 +33,4 @@ coverage.xml
 Thumbs.db
 data/raw/*
 !data/raw/.gitkeep
+data/staging/

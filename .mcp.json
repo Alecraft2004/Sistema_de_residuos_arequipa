@@ -1,0 +1,14 @@
+{
+	"mcpServers": {
+		"camber-mcp": {
+			"type": "http",
+			"url": "https://camber-mcp.cambercloud.com/mcp",
+			"tools": [
+				"*"
+			],
+			"headers": {
+				"Authorization": "Bearer 2f0f9e5809b488c036f87d9ccaa4ef0715655674"
+			}
+		}
+	}
+}
