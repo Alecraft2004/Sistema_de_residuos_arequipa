@@ -8,10 +8,32 @@ from .ml_service import predecir_residuos
 
 COORDENADAS = {
     "Centro Histórico": (-16.3989, -71.5369),
+    "San Lázaro": (-16.3957, -71.5298),
+    "Mercado San Camilo": (-16.4042, -71.5332),
     "La Libertad": (-16.3540, -71.5670),
     "Zamácola": (-16.3452, -71.5630),
+    "Ciudad Municipal": (-16.3387, -71.5593),
     "Mariscal Cáceres": (-16.4310, -71.5110),
     "Miguel Grau": (-16.4250, -71.5050),
+    "Guardia Civil": (-16.4236, -71.4965),
+    "La Melgar": (-16.4308, -71.5248),
+    "Simón Bolívar": (-16.4260, -71.5203),
+    "Alto Misti": (-16.3897, -71.5260),
+    "Tomasa Tito Condemayta": (-16.3892, -71.5200),
+    "Antiquilla": (-16.3903, -71.5480),
+    "Pampa de Camarones": (-16.3858, -71.5540),
+    "Buenos Aires": (-16.3660, -71.5450),
+    "Francisco Bolognesi": (-16.3712, -71.5402),
+    "Ciudad Mi Trabajo": (-16.4700, -71.5300),
+    "Lara": (-16.4610, -71.5350),
+    "Atalaya": (-16.4090, -71.5080),
+    "Generalísimo San Martín": (-16.4037, -71.5100),
+    "Independencia": (-16.3670, -71.5260),
+    "Apurímac": (-16.3600, -71.5220),
+    "Andrés Avelino Cáceres": (-16.4540, -71.5720),
+    "Tingo Grande": (-16.4710, -71.5590),
+    "Huaranguillo": (-16.4290, -71.5680),
+    "Arancota": (-16.4420, -71.5790),
 }
 BASE_MUNICIPAL = (-16.3988, -71.5350)
 ORDEN_PRIORIDAD = {"Alta": 0, "Media": 1, "Baja": 2}

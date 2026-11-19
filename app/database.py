@@ -74,6 +74,22 @@ class Usuario(Base):
     rol: Mapped[str] = mapped_column(String(20), nullable=False)
 
 
+ZONAS_DEMOSTRATIVAS = {
+    "Cercado": [("Centro Histórico", 12600), ("San Lázaro", 10800), ("Mercado San Camilo", 14200)],
+    "Cerro Colorado": [("Zamácola", 28500), ("La Libertad", 22100), ("Ciudad Municipal", 26400)],
+    "Paucarpata": [("Miguel Grau", 31800), ("Mariscal Cáceres", 19400), ("Guardia Civil", 23900)],
+    "José Luis Bustamante y Rivero": [("La Melgar", 18700), ("Simón Bolívar", 16400)],
+    "Miraflores": [("Alto Misti", 17200), ("Tomasa Tito Condemayta", 14800)],
+    "Yanahuara": [("Antiquilla", 9700), ("Pampa de Camarones", 11200)],
+    "Cayma": [("Buenos Aires", 18400), ("Francisco Bolognesi", 15900)],
+    "Socabaya": [("Ciudad Mi Trabajo", 20300), ("Lara", 13700)],
+    "Mariano Melgar": [("Atalaya", 21600), ("Generalísimo San Martín", 18100)],
+    "Alto Selva Alegre": [("Independencia", 24800), ("Apurímac", 19300)],
+    "Hunter": [("Andrés Avelino Cáceres", 15400), ("Tingo Grande", 11800)],
+    "Sachaca": [("Huaranguillo", 10500), ("Arancota", 8900)],
+}
+
+
 def get_engine():
     database_url = os.getenv("DATABASE_URL")
     if not database_url:
@@ -86,22 +102,19 @@ def preparar_base_datos() -> None:
     Base.metadata.create_all(engine)
 
     with Session(engine) as session:
-        if not session.scalar(select(Distrito.id).limit(1)):
-            cerro_colorado = Distrito(nombre="Cerro Colorado")
-            paucarpata = Distrito(nombre="Paucarpata")
-            cercado = Distrito(nombre="Cercado")
-            session.add_all([cerro_colorado, paucarpata, cercado])
-            session.flush()
-            session.add_all(
-                [
-                    Zona(nombre="Zamácola", poblacion_estimada=28500, distrito=cerro_colorado),
-                    Zona(nombre="La Libertad", poblacion_estimada=22100, distrito=cerro_colorado),
-                    Zona(nombre="Miguel Grau", poblacion_estimada=31800, distrito=paucarpata),
-                    Zona(nombre="Mariscal Cáceres", poblacion_estimada=19400, distrito=paucarpata),
-                    Zona(nombre="Centro Histórico", poblacion_estimada=12600, distrito=cercado),
-                ]
-            )
-            session.commit()
+        for nombre_distrito, zonas in ZONAS_DEMOSTRATIVAS.items():
+            distrito = session.scalar(select(Distrito).where(Distrito.nombre == nombre_distrito))
+            if not distrito:
+                distrito = Distrito(nombre=nombre_distrito)
+                session.add(distrito)
+                session.flush()
+            for nombre_zona, poblacion in zonas:
+                existe_zona = session.scalar(
+                    select(Zona.id).where(Zona.nombre == nombre_zona, Zona.distrito_id == distrito.id)
+                )
+                if not existe_zona:
+                    session.add(Zona(nombre=nombre_zona, poblacion_estimada=poblacion, distrito=distrito))
+        session.commit()
 
     with Session(engine) as session:
         if not session.scalar(select(Usuario.id).limit(1)):
