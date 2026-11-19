@@ -6,10 +6,32 @@ import './real-map.css'
 
 const zoneCoordinates = {
   'Centro Histórico': [-16.3989, -71.5369],
+  'San Lázaro': [-16.3957, -71.5298],
+  'Mercado San Camilo': [-16.4042, -71.5332],
   'La Libertad': [-16.354, -71.567],
   Zamácola: [-16.3452, -71.563],
+  'Ciudad Municipal': [-16.3387, -71.5593],
   'Mariscal Cáceres': [-16.431, -71.511],
   'Miguel Grau': [-16.425, -71.505],
+  'Guardia Civil': [-16.4236, -71.4965],
+  'La Melgar': [-16.4308, -71.5248],
+  'Simón Bolívar': [-16.426, -71.5203],
+  'Alto Misti': [-16.3897, -71.526],
+  'Tomasa Tito Condemayta': [-16.3892, -71.52],
+  Antiquilla: [-16.3903, -71.548],
+  'Pampa de Camarones': [-16.3858, -71.554],
+  'Buenos Aires': [-16.366, -71.545],
+  'Francisco Bolognesi': [-16.3712, -71.5402],
+  'Ciudad Mi Trabajo': [-16.47, -71.53],
+  Lara: [-16.461, -71.535],
+  Atalaya: [-16.409, -71.508],
+  'Generalísimo San Martín': [-16.4037, -71.51],
+  Independencia: [-16.367, -71.526],
+  Apurímac: [-16.36, -71.522],
+  'Andrés Avelino Cáceres': [-16.454, -71.572],
+  'Tingo Grande': [-16.471, -71.559],
+  Huaranguillo: [-16.429, -71.568],
+  Arancota: [-16.442, -71.579],
 }
 const baseMunicipal = [-16.3988, -71.535]
 const priorityTone = (priority) => priority === 'Alta' ? 'high' : priority === 'Media' ? 'mid' : 'low'
