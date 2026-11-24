@@ -202,9 +202,18 @@ def resumen(_: dict = Depends(usuario_actual)) -> dict:
         "metricas_modelo": obtener_metricas_modelo(),
     }
 
-
 from .routers.etl import router as etl_router
 from .routers.minam import router as minam_router
+from .routers.territorio import router as territorio_router
+from app.routers.valorizacion import router as valorizacion_router
+from app.routers.rutas import router as rutas_router
+from app.routers.oefa import router as oefa_router
+from app.routers.diagnostico import router as diagnostico_router
 
 app.include_router(etl_router)
 app.include_router(minam_router)
+app.include_router(territorio_router)
+app.include_router(valorizacion_router)
+app.include_router(rutas_router)
+app.include_router(oefa_router)
+app.include_router(diagnostico_router)

@@ -22,6 +22,10 @@ from ..services.ml.minam_prediction_service import (
     metrics,
     model_state,
 )
+from ..services.ml.minam_historical_service import (
+    HistoricalServiceError,
+    listar_historico
+)
 
 router = APIRouter(prefix="/kdd/minam", tags=["KDD MINAM"])
 SEGURIDAD_MINAM = HTTPBearer()
@@ -129,3 +133,27 @@ def evaluacion_2024(
         return [EvaluacionMINAMResponse(**row) for row in historical_evaluation()]
     except PredictionServiceError as error:
         raise _error_servicio(error) from error
+
+
+@router.get("/historico", tags=["Histórico MINAM"])
+def historico_minam(
+    anio: Annotated[int | None, Query(ge=1900, le=2100)] = None,
+    ubigeo: Annotated[str | None, Query(min_length=1, max_length=6)] = None,
+    departamento: Annotated[str | None, Query(max_length=120)] = None,
+    provincia: Annotated[str | None, Query(max_length=120)] = None,
+    distrito: Annotated[str | None, Query(max_length=120)] = None,
+    _: dict = Depends(cuenta_actual_minam),
+) -> list[dict]:
+    try:
+        return listar_historico(
+            anio=anio,
+            ubigeo=ubigeo,
+            departamento=departamento,
+            provincia=provincia,
+            distrito=distrito,
+        )
+    except HistoricalServiceError as error:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(error),
+        ) from error

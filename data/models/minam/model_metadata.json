@@ -23,7 +23,7 @@
   "python": "3.12.3",
   "numpy": "2.5.4",
   "scikit_learn": "1.7.2",
-  "fecha_entrenamiento_utc": "2026-11-13T01:42:01.050500+00:00",
+  "fecha_entrenamiento_utc": "2026-11-24T04:50:30.273058+00:00",
   "imputacion": "SimpleImputer(strategy='median', keep_empty_features=True) dentro de cada Pipeline",
   "validacion": "origen expansivo: 2020-2021->2022 y 2020-2022->2023",
   "oeFA_utilizado": false
