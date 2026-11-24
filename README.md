@@ -196,22 +196,38 @@ No es necesario compartir manualmente la carpeta `node_modules/`.
 - No almacenar datos sensibles directamente en los componentes.
 - Obtener los resultados del sistema mediante los servicios del backend cuando corresponda.
 
-## 11. Estado del proyecto
+## 11. Integración funcional actual
 
-AQPredict se encuentra en proceso de consolidación e integración.
+El frontend integra los siguientes servicios del backend:
 
-La versión final del frontend estará organizada alrededor de los cuatro módulos principales:
+- **Panel principal:** `/diagnostico/dashboard` y `/diagnostico/mapa`.
+- **Priorización territorial:** `/diagnostico/priorizacion` y `/diagnostico/plan-atencion`.
+- **Fuentes:** resúmenes de `/fuentes/oefa`, `/fuentes/valorizacion` y `/fuentes/rutas`.
+- **MINAM KDD / ML:** estado, métricas, predicciones y evaluación histórica mediante `/kdd/minam`.
+- **Registro operativo heredado:** zonas, residuos, predicciones demostrativas y reportes.
+- **ETL:** validación, importación y consulta del historial desde Administración. La importación está restringida al rol Administrador.
 
-1. Predicción de generación municipal.
-2. Priorización territorial.
-3. Análisis ambiental OEFA.
-4. Identificación de zonas críticas.
+El mapa principal utiliza la cartografía GeoJSON oficial que entrega el backend. La pantalla de predicción por zonas conserva un mapa ilustrativo del módulo demostrativo y no debe interpretarse como cartografía oficial ni como ruta física validada.
 
-La sección técnica de demostración KDD / ML MINAM no formará parte de la navegación de la versión final.
+La priorización territorial es orientativa: combina generación proyectada y presencia de áreas degradadas OEFA. No equivale a una predicción de acumulación de residuos ni a una optimización de rutas vehiculares.
 
-Las pantallas existentes serán revisadas para conservar los componentes útiles y reemplazar progresivamente los datos demostrativos por información procedente del backend.
+La unidad de los indicadores de valorización se muestra como pendiente de confirmación cuando el backend no proporciona metadatos de unidad.
+
+## 12. Verificación y límites de esta entrega
+
+Antes de dar por finalizada la integración, ejecutar en el entorno local:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm lint
+pnpm build
+```
+
+Comprobar también que el backend disponga de los artefactos MINAM requeridos por sus servicios y que los archivos oficiales de las fuentes estén en las rutas configuradas. La disponibilidad de los endpoints puede variar si faltan esos archivos o la conexión a la base de datos.
+
+El despliegue no forma parte de esta etapa.
 
 ---
 
 **AQPredict Residuos — Frontend**  
-Interfaz de visualización y consulta del sistema predictivo de gestión de residuos sólidos urbanos en Arequipa.
+Interfaz de visualización, consulta e integración de fuentes para el sistema de análisis territorial de residuos sólidos urbanos en Arequipa.

@@ -55,13 +55,20 @@ export default function MinamKdd({ token, onSessionExpired }) {
     setModelState({ kind: 'loading' })
     setLoadError('')
     try {
-      const [state, metricData, arequipaData, evaluationData] = await Promise.all([
-        api('/kdd/minam/modelo/estado', { token }),
+      const state = await api('/kdd/minam/modelo/estado', { token })
+      setModelState({ kind: state.disponible === false ? 'unavailable' : 'ready', data: state })
+      if (state.disponible === false) {
+        setMetrics(null)
+        setArequipa([])
+        setEvaluation([])
+        setPredictions([])
+        return
+      }
+      const [metricData, arequipaData, evaluationData] = await Promise.all([
         api('/kdd/minam/modelo/metricas', { token }),
         api('/kdd/minam/predicciones/arequipa', { token }),
         api('/kdd/minam/evaluacion/2024', { token }),
       ])
-      setModelState({ kind: state.disponible === false ? 'unavailable' : 'ready', data: state })
       setMetrics(metricData)
       setArequipa(Array.isArray(arequipaData) ? arequipaData : [])
       setEvaluation(Array.isArray(evaluationData) ? evaluationData : [])
@@ -122,7 +129,7 @@ export default function MinamKdd({ token, onSessionExpired }) {
   }
 
   return <>
-    <PageTitle eyebrow="Inteligencia de datos" title="KDD / ML MINAM" text="Consulta el baseline de persistencia para generación municipal." action={<button className="refresh" onClick={loadBaseData}><IconRefresh size={17} />Actualizar módulo</button>} />
+    <PageTitle eyebrow="Inteligencia de datos" title="KDD / ML MINAM" text={statusData?.metodologia || "Consulta el modelo predictivo MINAM y su evaluación histórica."} action={<button className="refresh" onClick={loadBaseData}><IconRefresh size={17} />Actualizar módulo</button>} />
     {loadError && <div className="notice error"><IconAlertTriangle size={18} />{loadError}<button onClick={() => setLoadError('')}>Cerrar</button></div>}
     {modelState.kind === 'loading' && <ApiState state={modelState} />}
     {modelState.kind === 'error' && <ApiState state={{ kind: 'error', message: loadError || 'El modelo no está disponible.' }} onRetry={loadBaseData} />}
